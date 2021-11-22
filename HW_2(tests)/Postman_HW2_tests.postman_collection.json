@@ -270,7 +270,7 @@
 							"var resp_data = pm.response.json();\r",
 							" //console.log(resp_data)\r",
 							"\r",
-							"var req_get = pm.request.url.query.toObject()\r",
+							"var req_get = pm.request.url.query.toObject();\r",
 							"//console.log(req_get)\r",
 							"\r",
 							"// name resp = name req (name from req)\r",
@@ -314,23 +314,28 @@
 							"});\r",
 							"// 2 elem salary = salary*3 request (salary from request.)\r",
 							"pm.test(\"Salary 2 - salary*3 req\", function(){\r",
-							"    console.log(parseInt(resp_data.salary[2]))\r",
-							"    console.log(req_get.salary*3)\r",
+							"    //console.log(parseInt(resp_data.salary[2]))\r",
+							"    //console.log(req_get.salary*3)\r",
 							"    pm.expect(parseInt(resp_data.salary[2])).to.eql(req_get.salary*3)\r",
 							"});\r",
 							"\r",
-							"// // transiv in environment name\r",
-							"// pm.environment.set(\"name\", req_get.name)\r",
+							"// transiv in environment name\r",
+							"pm.environment.set(\"name\", resp_data.name)\r",
 							"\r",
-							"// // transiv in environment name age\r",
-							"// pm.environment.set(\"age\", req_get.age)\r",
+							"// transiv in environment name age\r",
+							"pm.environment.set(\"age\", req_get.age)\r",
 							"\r",
-							"// // transiv in environment name salary\r",
-							"// pm.environment.set(\"salary\", req_get.salary)\r",
+							"// transiv in environment name salary\r",
+							"pm.environment.set(\"salary\", req_get.salary)\r",
+							"\r",
 							"\r",
 							"// Написать цикл который выведет в консоль по порядку элементы списка из параметра salary.\r",
 							"\r",
-							"\r",
+							"var arr_len = resp_data.salary.length;\r",
+							"//console.log(arr_len)\r",
+							"for (var step = 0; step < arr_len; step++){\r",
+							"    console.log(\"Elment \", resp_data.salary[step])\r",
+							"}\r",
 							"\r",
 							"\r",
 							"\r",
@@ -346,7 +351,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://162.55.220.72:5005/object_info_4?name=Yana&age=25&salary=7",
+					"raw": "http://162.55.220.72:5005/object_info_4?name={{name}}&age={{age}}&salary={{salary}}",
 					"protocol": "http",
 					"host": [
 						"162",
@@ -361,15 +366,151 @@
 					"query": [
 						{
 							"key": "name",
-							"value": "Yana"
+							"value": "{{name}}"
 						},
 						{
 							"key": "age",
-							"value": "25"
+							"value": "{{age}}"
 						},
 						{
 							"key": "salary",
-							"value": "7"
+							"value": "{{salary}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "object_info2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var resp_json = pm.response.json();\r",
+							"//console.log(resp_json)\r",
+							"var req_url = pm.request.url.query.toObject();\r",
+							"//console.log(req_url)\r",
+							"\r",
+							"pm.test(\"Status code 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"//  json response have start_qa_salary\r",
+							"pm.test(\"Json resp have start_qa_salary\", function(){\r",
+							"    pm.expect(resp_json).to.have.property(\"start_qa_salary\")\r",
+							"});\r",
+							"\r",
+							"//  json response have qa_salary_after_6_months\r",
+							"pm.test(\"Json resp have qa_salary_after_6_months\", function(){\r",
+							"    pm.expect(resp_json).to.have.property(\"qa_salary_after_6_months\")\r",
+							"});\r",
+							"\r",
+							"//  json response have qa_salary_after_12_months\r",
+							"pm.test(\"Json resp have qa_salary_after_12_months\", function(){\r",
+							"    pm.expect(resp_json).to.have.property(\"qa_salary_after_12_months\")\r",
+							"});\r",
+							"\r",
+							"//  json response have qa_salary_after_1.5_year\r",
+							"pm.test(\"Json resp have qa_salary_after_1.5_year\", function(){\r",
+							"    pm.expect(resp_json).to.have.property(\"qa_salary_after_1.5_year\")\r",
+							"});\r",
+							"\r",
+							"//  json response have qa_salary_after_3.5_years\r",
+							"pm.test(\"Json resp have qa_salary_after_3.5_years\", function(){\r",
+							"    pm.expect(resp_json).to.have.property(\"qa_salary_after_3.5_years\")\r",
+							"});\r",
+							"\r",
+							"//  json response have person\r",
+							"pm.test(\"Json resp have person\", function(){\r",
+							"    pm.expect(resp_json).to.have.property(\"person\")\r",
+							"});\r",
+							"//  start_qa_salary = salary request (salary from request.)\r",
+							"pm.test(\"start_qa_salary = salary\", function(){\r",
+							"    pm.expect(resp_json.start_qa_salary).to.eql(parseInt(req_url.salary))\r",
+							"    //console.log(resp_json.start_qa_salary, parseInt(req_url.salary))\r",
+							"});\r",
+							"\r",
+							"//  qa_salary_after_6_months = salary*2 request (salary from request.)\r",
+							"pm.test(\"qa_salary_after_6_months = salary*2\", function(){\r",
+							"    pm.expect(resp_json.qa_salary_after_6_months).to.eql(req_url.salary*2)\r",
+							"    //console.log(resp_json.qa_salary_after_6_months,(req_url.salary*2))\r",
+							"});\r",
+							"\r",
+							"//  qa_salary_after_12_months = salary*2.7 request (salary from request.)\r",
+							"pm.test(\" qa_salary_after_12_months = salary*2.7\", function(){\r",
+							"    pm.expect(resp_json. qa_salary_after_12_months).to.eql(req_url.salary*2.7)\r",
+							"    //console.log(resp_json.qa_salary_after_12_months, req_url.salary*2.7)\r",
+							"});\r",
+							"\r",
+							"//  qa_salary_after_1.5_year = salary*3.3 request (salary from request.)\r",
+							"pm.test(\"qa_salary_after_1.5_year = salary*3.3\", function(){\r",
+							"    pm.expect(resp_json[\"qa_salary_after_1.5_year\"]).to.eql(req_url.salary*3.3)\r",
+							"    //console.log(resp_json[\"qa_salary_after_1.5_year\"], req_url.salary*3.3)\r",
+							"});\r",
+							"\r",
+							"//  qa_salary_after_3.5_years = salary*3.8 request (salary from request.)\r",
+							"pm.test(\"qa_salary_after_3.5_years\", function(){\r",
+							"    pm.expect(resp_json[\"qa_salary_after_3.5_years\"]).to.eql(req_url.salary*3.8)\r",
+							"    //console.log(resp_json[\"qa_salary_after_3.5_years\"], req_url.salary*3.8)\r",
+							"});\r",
+							"\r",
+							"//  in person, 1 u_name = salary request (salary from request.)\r",
+							"pm.test(\"person, 1 u_name = salary\", function(){\r",
+							"    pm.expect(resp_json.person.u_name[1]).to.eql(parseInt(req_url.salary))\r",
+							"    //console.log(resp_json.person.u_name[1], parseInt(req_url.salary))\r",
+							"});\r",
+							" \r",
+							"//  u_age = age request (age from request.)\r",
+							" pm.test(\"u_age = age\", function(){\r",
+							"    pm.expect(resp_json.person.u_age).to.eql(parseInt(req_url.age))\r",
+							"   //console.log(resp_json.person.u_age, parseInt(req_url.age))\r",
+							"});\r",
+							"\r",
+							"//  u_salary_5_years = salary*4.2 request (salary from request.)\r",
+							" pm.test(\" u_salary_5_years = salary*4.2\", function(){\r",
+							"    pm.expect(resp_json.person.u_salary_5_years).to.eql(req_url.salary*4.2)\r",
+							"    //console.log(resp_json.person.u_salary_5_years, req_url.salary*4.2)\r",
+							"});\r",
+							"\r",
+							"//  Написать цикл который выведет в консоль по порядку элементы списка из параметра person.\r",
+							"for (let key in resp_json.person){\r",
+							"    console.log(resp_json.person[key])\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://162.55.220.72:5005/object_info_2?name={{name}}&age={{age}}&salary={{salary}}",
+					"protocol": "http",
+					"host": [
+						"162",
+						"55",
+						"220",
+						"72"
+					],
+					"port": "5005",
+					"path": [
+						"object_info_2"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "{{name}}"
+						},
+						{
+							"key": "age",
+							"value": "{{age}}"
+						},
+						{
+							"key": "salary",
+							"value": "{{salary}}"
 						}
 					]
 				}
